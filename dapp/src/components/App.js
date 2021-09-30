@@ -5,7 +5,7 @@ import Loading from './Loading';
 import Layout from './Layout';
 import Home from './Home';
 import Evaluaciones from "./Evaluaciones";
-import {Alumnos, Alumno} from "./Alumnos";
+import {Alumnos, Alumno} from "./Alumnos/Alumnos";
 import Calificaciones from "./Calificaciones";
 import MisCosas from "./MisCosas";
 import NoMatch from './NoMatch';
