@@ -3,6 +3,7 @@ import {newContextComponents} from "@drizzle/react-components";
 
 import CalificacionesHead from "./CalificacionesHead";
 import CalificacionesBody from "./CalificacionesBody";
+import {CalificarV0, CalificarV1, CalificarV2, CalificarV3} from "./Calificar";
 
 const {ContractData} = newContextComponents;
 const {useDrizzle, useDrizzleState} = drizzleReactHooks;
@@ -26,11 +27,20 @@ const Calificaciones = () => {
                               method={"evaluacionesLength"}
                               render={el => <table>
                                   <CalificacionesHead evaluacionesLength={el}/>
-                                  <CalificacionesBody matriculasLength={ml}
-                                                      evaluacionesLength={el}/>
+                                  <CalificacionesBody
+                                      matriculasLength={ml}
+                                      evaluacionesLength={el}/>
                               </table>}
                           />}
             />
+
+            <CalificarV0/>
+
+            <CalificarV1/>
+
+            <CalificarV2/>
+
+            <CalificarV3/>
         </section>
     );
 };
