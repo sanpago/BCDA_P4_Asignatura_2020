@@ -7,7 +7,7 @@ import Home from './Home';
 import Evaluaciones from "./Evaluaciones/Evaluaciones";
 import {Alumnos, Alumno} from "./Alumnos/Alumnos";
 import Calificaciones from "./Calificaciones/Calificaciones";
-import MisCosas from "./MisCosas";
+import MisCosas from "./MisCosas/MisCosas";
 import NoMatch from './NoMatch';
 
 function App() {
