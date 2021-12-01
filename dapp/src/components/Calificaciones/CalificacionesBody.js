@@ -1,29 +1,19 @@
-import {drizzleReactHooks} from '@drizzle/react-plugin'
-import {newContextComponents} from "@drizzle/react-components";
+import {drizzleReactHooks} from "@drizzle/react-plugin";
+
 import CalificacionRow from "./CalificacionRow";
 
-const {ContractData} = newContextComponents;
-const {useDrizzle, useDrizzleState} = drizzleReactHooks;
+const {useDrizzle} = drizzleReactHooks;
 
-const CalificacionesBody = ({matriculasLength, evaluacionesLength}) => {
-    const {drizzle} = useDrizzle();
-    const drizzleState = useDrizzleState(state => state);
+const CalificacionesBody = () => {
+    const {useCacheCall} = useDrizzle();
+
+    const ml = useCacheCall("Asignatura", "matriculasLength") || 0;
 
     let rows = [];
-    for (let i = 0; i < matriculasLength; i++) {
-        rows.push(
-            <ContractData
-                drizzle={drizzle}
-                drizzleState={drizzleState}
-                contract={"Asignatura"}
-                method={"matriculas"}
-                methodArgs={[i]}
-                render={addr => <CalificacionRow
-                   alumnoIndex={i}
-                    alumnoAddr={addr}
-                    evaluacionesLength={evaluacionesLength}/>}
-            />);
+    for (let i = 0; i < ml; i++) {
+        rows.push(<CalificacionRow key={"cb-"+i} alumnoIndex={i}/>);
     }
+
     return <tbody>{rows}</tbody>;
 };
 

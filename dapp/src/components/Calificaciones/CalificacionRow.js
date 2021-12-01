@@ -1,52 +1,39 @@
 import {drizzleReactHooks} from '@drizzle/react-plugin'
-import {newContextComponents} from "@drizzle/react-components";
 
-const {ContractData} = newContextComponents;
-const {useDrizzle, useDrizzleState} = drizzleReactHooks;
+const {useDrizzle} = drizzleReactHooks;
 
-const CalificacionRow = ({alumnoIndex, alumnoAddr, evaluacionesLength}) => {
-    const {drizzle} = useDrizzle();
-    const drizzleState = useDrizzleState(state => state);
+const CalificacionRow = ({alumnoIndex}) => {
+    const {useCacheCall} = useDrizzle();
 
-    let cells = [];
-    for (let ei = 0; ei < evaluacionesLength; ei++) {
+    const alumnoAddr = useCacheCall("Asignatura", "matriculas", alumnoIndex);
 
-        cells.push(
-            <ContractData
-                drizzle={drizzle}
-                drizzleState={drizzleState}
-                contract={"Asignatura"}
-                method={"calificaciones"}
-                methodArgs={[alumnoAddr, ei]}
-                render={nota =>
-                    <td key={"p2-" + alumnoIndex + "-" + ei}>
-                        {nota.tipo === "0" ? "N.P." : ""}
-                        {nota.tipo === "1" ? (nota.calificacion / 10).toFixed(1) : ""}
-                        {nota.tipo === "2" ? (nota.calificacion / 10).toFixed(1) + "(M.H.)" : ""}
-                    </td>
-                }
-            />)
-    }
-
-    return (
-        <tr key={"d" + alumnoIndex}>
-            <th>A<sub>{alumnoIndex}</sub></th>
-
-            <td><ContractData drizzle={drizzle}
-                              drizzleState={drizzleState}
-                              contract={"Asignatura"}
-                              method={"datosAlumno"}
-                              methodArgs={[alumnoAddr]}
-                              render={datos => <>
-                                  {datos.nombre}
-                              </>}
-            /></td>
-
-            {cells}
-        </tr>
+    let alumnoName = useCacheCall(['Asignatura'],
+        call => alumnoAddr && call("Asignatura", "datosAlumno", alumnoAddr)?.nombre
     );
+
+    let cells = useCacheCall(['Asignatura'], call => {
+        if (!alumnoAddr) { return []; }
+
+        let cells = [];
+        const evaluacionesLength = call("Asignatura", "evaluacionesLength") || 0;
+        for (let ei = 0; ei < evaluacionesLength; ei++) {
+            const nota = call("Asignatura", "calificaciones", alumnoAddr, ei);
+            cells.push(
+                <td key={"p2-" + alumnoIndex + "-" + ei}>
+                    {nota?.tipo === "0" ? "N.P." : ""}
+                    {nota?.tipo === "1" ? (nota?.calificacion / 10).toFixed(1) : ""}
+                    {nota?.tipo === "2" ? (nota?.calificacion / 10).toFixed(1) + "(M.H.)" : ""}
+                </td>
+            );
+        }
+        return cells;
+    });
+
+    return <tr key={"d" + alumnoIndex}>
+            <th>A<sub>{alumnoIndex}</sub></th>
+            <td>{alumnoName}</td>
+            {cells}
+        </tr>;
 };
 
 export default CalificacionRow;
-
-

@@ -1,43 +1,35 @@
 import {drizzleReactHooks} from '@drizzle/react-plugin'
-import {newContextComponents} from "@drizzle/react-components";
 import {useParams, Link} from "react-router-dom";
 
 import AlumnosHead from "./AlumnosHead";
 import AlumnosBody from "./AlumnosBody";
 
-const {ContractData} = newContextComponents;
-const {useDrizzle, useDrizzleState} = drizzleReactHooks;
+const {useDrizzle} = drizzleReactHooks;
 
 export const Alumnos = () => {
-    const {drizzle} = useDrizzle();
-    const drizzleState = useDrizzleState(state => state);
+    const {useCacheCall} = useDrizzle();
+
+    const ml = useCacheCall("Asignatura", "matriculasLength") || 0;
 
     return (
         <section className="AppAlumnos">
             <h2>Alumnos</h2>
 
-            <ContractData
-                drizzle={drizzle}
-                drizzleState={drizzleState}
-                contract={"Asignatura"}
-                method={"matriculasLength"}
-                render={ml => (
-                    <table>
-                        <AlumnosHead/>
-                        <AlumnosBody matriculasLength={ml}/>
-                    </table>
-                )}
-            />
+            <table>
+                <AlumnosHead/>
+                <AlumnosBody matriculasLength={ml || 0}/>
+            </table>
         </section>
     );
 };
 
 
 export const Alumno = () => {
-    const {drizzle} = useDrizzle();
-    const drizzleState = useDrizzleState(state => state);
+    const {useCacheCall} = useDrizzle();
 
     let {addr} = useParams();
+
+    const datos = useCacheCall("Asignatura", "datosAlumno", addr);
 
     return <>
         <header className="AppAlumno">
@@ -45,17 +37,8 @@ export const Alumno = () => {
         </header>
 
         <ul>
-            <ContractData
-                drizzle={drizzle}
-                drizzleState={drizzleState}
-                contract={"Asignatura"}
-                method={"datosAlumno"}
-                methodArgs={[addr]}
-                render={datos => <>
-                    <li><b>Nombre:</b> {datos?.nombre ?? "Desconocido"}</li>
-                    <li><b>Email:</b> {datos?.email ?? "Desconocido"}</li>
-                </>}
-            />
+            <li><b>Nombre:</b> {datos?.nombre ?? "Desconocido"}</li>
+            <li><b>Email:</b> {datos?.email ?? "Desconocido"}</li>
             <li><b>Address:</b> {addr}</li>
         </ul>
 
