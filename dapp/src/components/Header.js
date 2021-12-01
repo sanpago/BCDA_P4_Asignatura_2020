@@ -1,31 +1,17 @@
 import {drizzleReactHooks} from '@drizzle/react-plugin'
-import {newContextComponents} from "@drizzle/react-components";
 
-const {ContractData} = newContextComponents;
-const {useDrizzle, useDrizzleState} = drizzleReactHooks;
+const {useDrizzle} = drizzleReactHooks;
 
 const Header = () => {
-    const {drizzle} = useDrizzle();
-    const drizzleState = useDrizzleState(state => state);
+    const {useCacheCall} = useDrizzle();
+
+    const nombre = useCacheCall("Asignatura", "nombre");
+    const curso = useCacheCall("Asignatura", "curso");
 
     return (
         <header className="AppHeader">
             <h1>
-                Asignatura: &nbsp;
-                <ContractData
-                    drizzle={drizzle}
-                    drizzleState={drizzleState}
-                    contract={"Asignatura"}
-                    method={"nombre"}
-                />
-                -
-                <ContractData
-                    drizzle={drizzle}
-                    drizzleState={drizzleState}
-                    contract={"Asignatura"}
-                    method={"curso"}
-                    render={data => ( <em>{data}</em> )}
-                />
+                Asignatura: {nombre}-<em>{curso}</em>
             </h1>
         </header>
     );

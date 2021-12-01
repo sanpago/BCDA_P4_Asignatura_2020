@@ -20,6 +20,13 @@ const Loading = ({children}) => {
         return (<main><h1>⚠️ Use Ganache {window.ethereum.chainId}</h1></main>);
     }
 
+    // Atender al evento que indica que el usuario ha seleccionado otra cuenta en Metamask:
+    window.ethereum.on('accountsChanged', accounts => {
+        // Recargar el UI con accounts[0]
+        console.log("Seleccionada otra cuenta =", accounts[0]);
+        window.location.reload();
+    });
+
     return <>
         {children}
     </>
